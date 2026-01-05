@@ -1,0 +1,30 @@
+/* Add Bootstrap for styling */
+/* Syncfusion theme */
+/* @import "~@syncfusion/ej2/material.css";
+@import "~@syncfusion/ej2-angular-charts/styles/material.css";
+@import "~@syncfusion/ej2-angular-grids/styles/material.css";
+@import "~@syncfusion/ej2-angular-calendars/styles/material.css"; */
+
+@import '~bootstrap/dist/css/bootstrap.min.css';
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f8f9fa;
+  margin: 0;
+  padding: 0;
+}
+
+.card {
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  border: 1px solid #dee2e6;
+  border-radius: 0.375rem;
+}
+
+.navbar {
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.badge {
+  font-size: 0.75em;
+  margin-right: 5px;
+}
