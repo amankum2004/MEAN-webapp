@@ -1,6 +1,7 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import Chart from 'chart.js/auto';
+import { ApiService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-hobbies-graphs',
@@ -172,7 +173,7 @@ export class HobbiesGraphsComponent implements OnInit {
   avgUsersPerHobby: number = 0;
   maxValue: number = 0;
 
-  constructor(private http: HttpClient) {}
+    constructor(private apiService: ApiService) {}
 
   ngOnInit() {
     this.loadHobbyData();
@@ -180,7 +181,7 @@ export class HobbiesGraphsComponent implements OnInit {
 
   loadHobbyData() {
     this.loading = true;
-    this.http.get('/api/users/analytics/hobbies').subscribe({
+     this.apiService.getHobbyAnalytics().subscribe({
       next: (data: any) => {
         this.hobbyData = data;
         this.calculateStats();

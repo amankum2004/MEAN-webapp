@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ApiService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-user-list',
@@ -254,7 +255,8 @@ export class UserListComponent implements OnInit {
   toastType: 'success' | 'error' | 'warning' = 'success';
 
   constructor(
-    private http: HttpClient,
+    // private http: HttpClient,
+    private apiService: ApiService, // Use ApiService instead of HttpClient
     private fb: FormBuilder
   ) {
     // Initialize the form
@@ -272,7 +274,7 @@ export class UserListComponent implements OnInit {
 
   loadUsers() {
     this.loading = true;
-    this.http.get('/api/users').subscribe({
+    this.apiService.getUsers().subscribe({
       next: (users: any) => {
         this.users = users;
         this.loading = false;
@@ -324,6 +326,7 @@ export class UserListComponent implements OnInit {
     this.userToDelete = null;
   }
 
+    // Update all other methods to use apiService
   saveUser() {
     if (this.userForm.valid) {
       this.saving = true;
@@ -336,8 +339,7 @@ export class UserListComponent implements OnInit {
       };
       
       if (this.isEditMode) {
-        // Update existing user
-        this.http.put(`/api/users/${this.currentUserId}`, userData).subscribe({
+        this.apiService.updateUser(this.currentUserId, userData).subscribe({
           next: (response: any) => {
             this.showNotification('Success', 'User updated successfully', 'success');
             this.closeModal();
@@ -351,8 +353,7 @@ export class UserListComponent implements OnInit {
           }
         });
       } else {
-        // Create new user
-        this.http.post('/api/users/register', userData).subscribe({
+        this.apiService.createUser(userData).subscribe({
           next: (response: any) => {
             this.showNotification('Success', 'User created successfully', 'success');
             this.closeModal();
@@ -366,9 +367,6 @@ export class UserListComponent implements OnInit {
           }
         });
       }
-    } else {
-      // Mark all fields as touched to show validation errors
-      this.markFormGroupTouched(this.userForm);
     }
   }
 
@@ -382,11 +380,12 @@ export class UserListComponent implements OnInit {
     });
   }
 
+  
   confirmDelete() {
     if (this.userToDelete) {
       this.deleting = true;
       
-      this.http.delete(`/api/users/${this.userToDelete._id}`).subscribe({
+      this.apiService.deleteUser(this.userToDelete._id).subscribe({
         next: (response: any) => {
           this.showNotification('Success', 'User deleted successfully', 'success');
           this.closeDeleteModal();

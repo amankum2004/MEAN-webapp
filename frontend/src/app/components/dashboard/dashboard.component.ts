@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { ApiService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -51,7 +52,7 @@ export class DashboardComponent implements OnInit {
   
   backendStatus: string = '';
 
-  constructor(private http: HttpClient) {}
+  constructor(private apiService: ApiService) {}
 
   ngOnInit() {
     this.checkBackend();
@@ -59,7 +60,7 @@ export class DashboardComponent implements OnInit {
   }
 
   checkBackend() {
-    this.http.get('/api/health').subscribe({
+    this.apiService.healthCheck().subscribe({
       next: (response: any) => {
         this.backendStatus = `Backend connected: ${response.message}`;
       },
@@ -70,7 +71,7 @@ export class DashboardComponent implements OnInit {
   }
 
   loadStats() {
-    this.http.get('/api/users').subscribe({
+    this.apiService.getUsers().subscribe({
       next: (users: any) => {
         const totalUsers = users.length;
         const avgAge = users.reduce((sum: number, user: any) => sum + user.age, 0) / totalUsers || 0;

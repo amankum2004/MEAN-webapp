@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
+import { ApiService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-user-registration',
@@ -77,7 +78,7 @@ export class UserRegistrationComponent {
   message: string = '';
   error: boolean = false;
 
-  constructor(private fb: FormBuilder, private http: HttpClient) {
+  constructor(private fb: FormBuilder, private apiService: ApiService) {
     this.registrationForm = this.fb.group({
       name: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
@@ -98,7 +99,7 @@ export class UserRegistrationComponent {
 
       this.message = 'Registering user...';
       
-      this.http.post('/api/users/register', userData).subscribe({
+        this.apiService.getHobbyAnalytics().subscribe({
         next: (response: any) => {
           this.message = 'User registered successfully!';
           this.error = false;
