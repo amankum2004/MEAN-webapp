@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ApiService } from 'src/app/services/user.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-user-list',
@@ -269,6 +270,9 @@ export class UserListComponent implements OnInit {
   }
 
   ngOnInit() {
+    console.log('Environment:', environment);
+    console.log('Production mode:', environment.production);
+    console.log('API URL:', environment.apiUrl);
     this.loadUsers();
   }
 
