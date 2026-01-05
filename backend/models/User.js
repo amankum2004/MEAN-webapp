@@ -29,7 +29,7 @@ const userSchema = new mongoose.Schema({
   }
 }, {
   // This automatically manages createdAt and updatedAt
-  timestamps: true
+  timestamps: true,
 });
 
 // No need for pre-save middleware with timestamps option
