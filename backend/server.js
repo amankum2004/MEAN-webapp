@@ -10,10 +10,11 @@ dotenv.config();
 // Initialize Express app
 const app = express();
 
-// CORS Configuration for production
+// CORS Configuration
 const allowedOrigins = [
   'http://localhost:4200',
-  'https://mean-webapp.vercel.app'
+  'https://mean-webapp.vercel.app',
+  'http://localhost:3000'
 ];
 
 const corsOptions = {
@@ -21,11 +22,12 @@ const corsOptions = {
     // Allow requests with no origin (like mobile apps or curl requests)
     if (!origin) return callback(null, true);
     
-    if (allowedOrigins.indexOf(origin) === -1) {
+    if (allowedOrigins.indexOf(origin) !== -1) {
+      return callback(null, true);
+    } else {
       const msg = `The CORS policy for this site does not allow access from the specified Origin: ${origin}`;
       return callback(new Error(msg), false);
     }
-    return callback(null, true);
   },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
@@ -35,15 +37,12 @@ const corsOptions = {
 // Apply CORS middleware
 app.use(cors(corsOptions));
 
-// Handle preflight requests
-app.options('*', cors(corsOptions));
-
 // Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // MongoDB connection
-const mongoURI = process.env.MONGODB_URI;
+const mongoURI = process.env.MONGODB_URI || 'mongodb://localhost:27017/user-hobbies';
 mongoose.connect(mongoURI)
 .then(() => console.log('✅ MongoDB connected successfully'))
 .catch(err => console.error('❌ MongoDB connection error:', err));
@@ -69,8 +68,8 @@ app.use((err, req, res, next) => {
   });
 });
 
-// Handle 404
-app.use((req, res) => {
+// Handle 404 - Make sure this is last
+app.use((req, res, next) => {
   res.status(404).json({ error: 'Route not found' });
 });
 
@@ -78,7 +77,13 @@ app.use((req, res) => {
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`🚀 Server running on port ${PORT}`);
-  console.log(`📊 API endpoints available at http://localhost:${PORT}/api`);
+  console.log(`📊 API endpoints:`);
+  console.log(`   http://localhost:${PORT}/api/health`);
+  console.log(`   http://localhost:${PORT}/api/users`);
+  console.log(`   http://localhost:${PORT}/api/users/register (POST)`);
+  console.log(`   http://localhost:${PORT}/api/users/analytics/hobbies`);
+  console.log(`\n🌐 Allowed origins:`);
+  allowedOrigins.forEach(origin => console.log(`   ${origin}`));
 });
 
 
